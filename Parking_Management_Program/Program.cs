@@ -16,7 +16,7 @@ namespace Parking_Management_Program
     }
 
     [Serializable]
-    public class Car
+    public class Car : IParking
     {
 
         private string carNum;
@@ -24,6 +24,9 @@ namespace Parking_Management_Program
         private DateTime enterTime;
         private DateTime exitTime;
 
+        public string CarNum { get => carNum; }
+        public DateTime EnterTime { get => enterTime; }
+        public DateTime ExitTime { get => exitTime; }
 
         public Car(string catNum, string carType, DateTime enterTime, DateTime exitTime)
         {
@@ -48,13 +51,31 @@ namespace Parking_Management_Program
         {
 
         }
+
+        public void PrintParkingStatus()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetParkedCar()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintReceipt()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    class Manager
+    class Manager : IParking
     {
-        Car[,] parkingStatus;
-        Dictionary<string, Car> recordList;
-        Dictionary<string, User> userList;
+        private Car[,] parkingStatus;
+        private Dictionary<string, Car> recordList;
+        private Dictionary<string, User> userList;
+        private readonly string ADMIN_ID;
+        private readonly string ADMIN_PW;
+
         public Manager()
         {
             parkingStatus = new Car[0, 0];
@@ -108,6 +129,37 @@ namespace Parking_Management_Program
             int key = int.Parse(Console.ReadLine());
             return key;
         }
+        private int managerMenu()
+        {
+            Console.WriteLine("1. 정산목록 조회");
+            Console.WriteLine("2. 주차차량 검색");
+            Console.WriteLine("3. 주차차량 현황");
+            int key = int.Parse(Console.ReadLine());
+            return key;
+        }
+
+        public void ManagerSelect()
+        {
+            int key = 0;
+            while((key = managerMenu()) != 0)
+            {
+                switch(key)
+                {
+                    case 1:
+                        ShowRecordList();
+                        break;
+                    case 2:
+                        GetParkedCar();
+                        break;
+                    case 3:
+                        PrintParkingStatus();
+                        break;
+                    default:
+                        Console.WriteLine("잘못 선택하였습니다.");
+                        break;
+                }
+            }
+        }
 
         public void AddRecord()
         {
@@ -156,7 +208,7 @@ namespace Parking_Management_Program
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     Car[,] parkingStatus = (Car[,])formatter.Deserialize(stream);    //serialize 해제 후 지정
-                    //parkingStatus = (Car[,])formatter.Deserialize(stream);    //직접 지정은 안될까? 나중에 시험
+                    //parkingStatus = (Car[,])formatter.Deserialize(stream);    //직접 지정은 안될까? 나중에 시험 >> 안됨
 
                 }
                 using (Stream stream = new FileStream("records.txt", FileMode.Open))
@@ -173,9 +225,11 @@ namespace Parking_Management_Program
 
         }
 
-        public long GetFee()
+        public long GetFee(Car car)
         {
-            return 0;
+            long fee;
+            fee = ((car.ExitTime.Subtract(car.EnterTime)).Hours) * 2000;
+            return fee;
         }
 
 
@@ -201,8 +255,17 @@ namespace Parking_Management_Program
 
             Console.Write("I D   입 력 : ");
             id = Console.ReadLine();
-            Console.Write("비 밀 번 호  입 력");
+            Console.Write("비 밀 번 호  입 력 : ");
             pw = Console.ReadLine();
+            if (id == ADMIN_ID && pw == ADMIN_PW)
+            {
+                Console.WriteLine("관 리 자 님  환 영 합 니 다.");
+                ManagerSelect();
+            }
+            else // 수정 
+            {
+                Console.WriteLine($"{id} 님  환 영 합 니 다.");
+            }
 
         }
 
@@ -219,6 +282,54 @@ namespace Parking_Management_Program
             Console.Write("핸 드 폰 번 호 를  입 력 해 주 세 요 : ");
             phoneNum = Console.ReadLine();
             userList.Add(carNum, new User(userName, carNum, 0, "", phoneNum));
+        }
+
+        public void PrintParkingStatus()
+        {
+
+            for (int i = 0; i < parkingStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < parkingStatus.GetLength(1); j++)
+                {
+                    if (parkingStatus[i, j] == null)
+                    {
+                        Console.Write($"{(char)(i + 65)} - {j + 1}\t");
+                    }
+                    else
+                    {
+                        Console.Write($"{parkingStatus[i, j].CarNum}\t");
+                    }
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public void GetParkedCar()
+        {
+            string carNum;
+            Console.Write("차 량 번 호 를  입 력 하 세 요 >> ");
+            carNum = Console.ReadLine();
+            for (int i = 0; i < parkingStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < parkingStatus.GetLength(1); j++)
+                {
+                    if (parkingStatus[i, j] == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
+                    }
+
+                }
+            }
+        }
+
+        public void PrintReceipt()
+        {
+            throw new NotImplementedException();
         }
     }
 
