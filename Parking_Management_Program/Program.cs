@@ -147,7 +147,6 @@ namespace Parking_Management_Program
             //    BinaryFormatter formatter = new BinaryFormatter();
             //    formatter.Serialize(stream, this.recordList);   //serialize해서 저장
             //} //불러오기 안할 경우에만 append쓰는게 맞지않나...
-
         }
         private void LoadData()
         {
