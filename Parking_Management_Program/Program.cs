@@ -11,8 +11,8 @@ namespace Parking_Management_Program
     public interface IParking
     {
         void PrintParkingStatus();
-        void GetParkedCar();
-        void PrintReceipt();
+        void SearchParkedCar();
+        void PrintReceipt(Car car);
     }
 
     [Serializable]
@@ -26,14 +26,16 @@ namespace Parking_Management_Program
 
         public string CarNum { get => carNum; }
         public DateTime EnterTime { get => enterTime; }
-        public DateTime ExitTime { get => exitTime; }
-
-        public Car(string catNum, string carType, DateTime enterTime, DateTime exitTime)
+        public DateTime ExitTime { 
+            get => exitTime;
+            set => exitTime = value; // add set property
+        }
+        
+        public Car(string catNum, string carType, DateTime enterTime) // delete exitTime
         {
             this.carNum = catNum;
             this.carType = carType;
             this.enterTime = enterTime;
-            this.exitTime = exitTime;
         }
 
 
@@ -42,27 +44,22 @@ namespace Parking_Management_Program
             return string.Format($"차량번호 :{carNum}, 차종 : {carType}, 입차시간 : {enterTime},  입차시간 :  {exitTime}");
         }
 
-        public void Enter()
-        {
-
-        }
 
         public void Exit()
         {
 
         }
 
-        public void PrintParkingStatus()
+        public void PrintParkingStatus() { 
+            throw new NotImplementedException();
+        }
+
+        public void SearchParkedCar()
         {
             throw new NotImplementedException();
         }
 
-        public void GetParkedCar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PrintReceipt()
+        public void PrintReceipt(Car car)
         {
             throw new NotImplementedException();
         }
@@ -149,7 +146,7 @@ namespace Parking_Management_Program
                         ShowRecordList();
                         break;
                     case 2:
-                        GetParkedCar();
+                        SearchParkedCar();
                         break;
                     case 3:
                         PrintParkingStatus();
@@ -305,7 +302,7 @@ namespace Parking_Management_Program
             }
         }
 
-        public void GetParkedCar()
+        public void SearchParkedCar()
         {
             string carNum;
             Console.Write("차 량 번 호 를  입 력 하 세 요 >> ");
@@ -325,11 +322,111 @@ namespace Parking_Management_Program
 
                 }
             }
+            Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
         }
 
-        public void PrintReceipt()
+        public void PrintReceipt(Car car)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("============주차 정보=============");
+            Console.WriteLine($"차량 번호 :\t{car.CarNum}");
+            Console.WriteLine($"입차 시간 :\t{car.EnterTime.ToString("yyyy/MM/dd HH:mm:ss")}");
+            Console.WriteLine($"출차 시간 :\t{car.ExitTime.ToString("yyyy/MM/dd HH:mm:ss")}");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine($"주차 요금 :\t{GetFee(car)}");
+            Console.WriteLine("==================================");
+        }
+
+        /////////////////////////////////
+        public void Enter()
+        {
+            string[] inputSpot;
+            int i, j;
+            string carType, carNum;
+            DateTime enterTime;
+            if (!isParkinglotFull())
+            {
+                Console.WriteLine("현재 만차로 주차가 불가능합니다. 초기 메뉴로 이동합니다.");
+                return;
+            }
+            Console.WriteLine("주차요금은 시간 당 2,000원입니다.");
+            Console.WriteLine("현재 주차 현황입니다. 주차 가능한 구역만 출력됩니다.");
+            Console.WriteLine("원하는 주차 자리를 구역-번호 양식으로 입력해주세요! ex) A-11");
+            inputSpot = Console.ReadLine().Split('-');
+            // 입력 정규식 표현으로 확인 및 예외 처리
+            i = (int)((char)inputSpot[0][0]) - 65;
+            j = int.Parse(inputSpot[1]);
+            //주차 가능한 자리인지 확인
+            Console.Write($"선택한 {(char)(i + 65)}-{j}는 주차 가능한 자리입니다. \n 차량번호를 입력하세요 :");
+            carNum = Console.ReadLine();
+            // 입력 정규식 표현으로 확인 및 예외 처리
+            Console.Write("차종을 입력해주세요 : ");
+            carType = Console.ReadLine();
+            enterTime = DateTime.Now;
+            Car enterCar = new Car(carNum, carType, enterTime);
+            parkingStatus[i, j] = enterCar;
+
+            Console.WriteLine("주차가 완료되었습니다.");
+            Console.WriteLine("============주차 정보=============");
+            Console.WriteLine($"차량 번호 :\t{carNum}");
+            Console.WriteLine($"주차 구역 :\t{(char)(i + 65)}-{j}");
+            Console.WriteLine($"입차 시간 :\t{enterTime.ToString("yyyy/MM/dd HH:mm:ss")}");
+            Console.WriteLine("==================================");
+        }
+
+        public void Exit()
+        {
+            string carNum;
+            Tuple<int, int> carSpace;
+            Console.Write($"출차할 차량번호를 입력하세요 :");
+            // 입력 정규식 표현으로 확인 및 예외 처리
+            carNum = Console.ReadLine();
+            carSpace = getParkedCarSpace(carNum);
+            if (carSpace == null)
+            {
+                Console.WriteLine("초기 메뉴로 이동합니다.");
+                return;
+            }
+            Car exitCar = parkingStatus[carSpace.Item1, carSpace.Item2];
+            exitCar.ExitTime = DateTime.Now;
+            PrintReceipt(exitCar);
+
+        }
+        public bool isParkinglotFull()
+        {
+            for (int i = 0; i < parkingStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < parkingStatus.GetLength(1); j++)
+                {
+                    if (parkingStatus[i, j] == null)
+                    {
+                        return false;
+                    }
+
+                }
+            }
+            return true;
+        }
+
+        public Tuple<int, int> getParkedCarSpace(string carNum)
+        {
+            for (int i = 0; i < parkingStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < parkingStatus.GetLength(1); j++)
+                {
+                    if (parkingStatus[i, j].CarNum == carNum)
+                    {
+                        Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
+                        return new Tuple<int, int>(i, j);
+                    }
+                }
+            }
+            Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
+            return null;
+        }
+
+        public void Pay(Car car)
+        {
+
         }
     }
 
