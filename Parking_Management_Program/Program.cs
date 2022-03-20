@@ -361,7 +361,7 @@ namespace Parking_Management_Program
             Console.WriteLine($"입차 시간 :\t{car.EnterTime.ToString("yyyy/MM/dd HH:mm:ss")}");
             Console.WriteLine($"출차 시간 :\t{car.ExitTime.ToString("yyyy/MM/dd HH:mm:ss")}");
             Console.WriteLine("----------------------------------");
-            Console.WriteLine($"주차 요금 :\t{GetFee(car)}");
+            Console.WriteLine($"주차 요금 :\t{GetFee(car)}원");
             Console.WriteLine("==================================");
         }
 
@@ -523,6 +523,28 @@ namespace Parking_Management_Program
             } while (!CheckCarNum(carNum));
             return carNum;
         }
+
+        public void InsertMoney(long fee)
+        {
+            long money;
+
+            while (true)
+            {
+                money = long.Parse(Console.ReadLine());
+
+                if (money < fee)
+                {
+                    Console.Write("돈 이  부 족 합 니 다. 다 시  넣 어 주 세 요 : ");
+                }
+                else if (money >= fee)
+                {
+                    Console.WriteLine($"거 스 름 돈 : {money - fee} 원");
+                    break;
+                }
+            }
+            Console.WriteLine("감 사 합 니 다 .  안 녕 히  가 세 요 .");
+        }
+
 
         #endregion
 
