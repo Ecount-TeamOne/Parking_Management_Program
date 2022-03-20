@@ -5,19 +5,14 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Parking_Management_Program
 {
-    public interface IParking
-    {
-        void PrintParkingStatus();
-        void GetParkedCar();
-        void PrintReceipt();
-    }
 
     [Serializable]
-    public class Car : IParking
+    public class Car 
     {
 
         private string carNum;
@@ -58,23 +53,10 @@ namespace Parking_Management_Program
             return time;
         }
         #endregion
-        public void PrintParkingStatus()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void GetParkedCar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PrintReceipt(Car car)
-        {
-            throw new NotImplementedException();    
-        }
     }
     [Serializable]
-    class Manager : IParking
+    class Manager 
     {
         private Car[,] parkingStatus;
         private List<Car> recordList;
@@ -154,7 +136,7 @@ namespace Parking_Management_Program
                         ShowRecordList();
                         break;
                     case 2:
-                        GetParkedCar();
+                        SearchParkedCar();
                         break;
                     case 3:
                         PrintParkingStatus();
@@ -340,7 +322,7 @@ namespace Parking_Management_Program
             }
         }
 
-        public void GetParkedCar()
+        public void SearchParkedCar()
         {
             string carNum;
             Console.Write("차 량 번 호 를  입 력 하 세 요 >> ");
@@ -364,14 +346,13 @@ namespace Parking_Management_Program
 
         public void PrintReceipt(Car car)
         {
-            Console.WriteLine("================= 영수증 =================");
-            Console.WriteLine($"차량번호\t: {car.CarNum}");
-            Console.WriteLine($"입차시간\t: {car.EnterTime}");
-            Console.WriteLine($"출차시간\t: {car.ExitTime}");
-            Console.WriteLine($"총 주차시간\t: {car.GetParkingTime()}");
-            Console.WriteLine("------------------------------------------");
-            Console.WriteLine($"요금\t\t: {GetFee(car)}원");
-            Console.WriteLine("==========================================");
+            Console.WriteLine("============주차 정보=============");
+            Console.WriteLine($"차량 번호 :\t{car.CarNum}");
+            Console.WriteLine($"입차 시간 :\t{car.EnterTime.ToString("yyyy/MM/dd HH:mm:ss")}");
+            Console.WriteLine($"출차 시간 :\t{car.ExitTime.ToString("yyyy/MM/dd HH:mm:ss")}");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine($"주차 요금 :\t{GetFee(car)}");
+            Console.WriteLine("==================================");
         }
 
     }
@@ -400,18 +381,33 @@ namespace Parking_Management_Program
 
     class Utils
     {
-        public bool checkCarNum()
+        public bool CheckCarNum(string carNum)
         {
-            return true;
+            return Regex.IsMatch(carNum, @"^\d{2,3}[가-힣]\d{4}$");
         }
 
-        public bool checkPhoneNum()
+        public bool CheckPhoneNum(string phoneNum)
         {
-            return true;
+            return Regex.IsMatch(phoneNum, @"^01([0-1|6-9])[ -]?(\d{3,4})[ -]?(\d{4})$");
         }
+
+        #region 추가
+
+        public bool CheckCarType(string carType)
+        {
+            List<string> carTypes = new List<string> { "소형", "중형", "대형" };
+            return carTypes.Contains(carType);
+        }
+
+        public bool CheckParkingLocation(string location)
+        {
+            return Regex.IsMatch(location, @"^[A-J]-([1-9]|10)$");
+        }
+        #endregion
+
     }
 
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
@@ -420,3 +416,4 @@ namespace Parking_Management_Program
         }
     }
 }
+
