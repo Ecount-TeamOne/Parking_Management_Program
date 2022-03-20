@@ -75,7 +75,6 @@ namespace Parking_Management_Program
             Console.WriteLine("1. 정산목록 조회");
             Console.WriteLine("2. 주차차량 검색");
             Console.WriteLine("3. 주차차량 현황");
-            Console.WriteLine("3. 주차차량 현황");
             int key = int.Parse(Console.ReadLine());
             return key;
         }
@@ -180,7 +179,7 @@ namespace Parking_Management_Program
         public long GetFee(Car car)
         {
             TimeSpan parkingTime = car.GetParkingTime();
-            long fee = parkingTime.Hours * 2000;
+            long fee = (parkingTime.Hours +1) * 2000;
             return fee;
         }
 
@@ -290,9 +289,10 @@ namespace Parking_Management_Program
                     {
                         continue;
                     }
-                    else
+                    else if(parkingStatus[i,j].CarNum == carNum)
                     {
                         Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
+                        return;
                     }
 
                 }
@@ -387,7 +387,7 @@ namespace Parking_Management_Program
         public void Exit()
         {
             string carNum = utils.InputCarNum();
-            Tuple<int, int> carSpace = getParkedCarSpace(carNum);
+            Tuple<int, int> carSpace = getParkedCarLoc(carNum);
 
             if (carSpace == null)
             {
@@ -467,22 +467,22 @@ namespace Parking_Management_Program
             return count;
         }
 
-        public Tuple<int, int> getParkedCarSpace(string carNum)
-        {
-            for (int i = 0; i < parkingStatus.GetLength(0); i++)
-            {
-                for (int j = 0; j < parkingStatus.GetLength(1); j++)
-                {
-                    if (parkingStatus[i, j].CarNum == carNum)
-                    {
-                        Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
-                        return new Tuple<int, int>(i, j);
-                    }
-                }
-            }
-            Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
-            return null;
-        }
+        //public Tuple<int, int> getParkedCarSpace(string carNum)
+        //{
+        //    for (int i = 0; i < parkingStatus.GetLength(0); i++)
+        //    {
+        //        for (int j = 0; j < parkingStatus.GetLength(1); j++)
+        //        {
+        //            if (parkingStatus[i, j].CarNum == carNum)
+        //            {
+        //                Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
+        //                return new Tuple<int, int>(i, j);
+        //            }
+        //        }
+        //    }
+        //    Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
+        //    return null;
+        //}
 
         public void Pay(Car car)
         {
