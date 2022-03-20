@@ -221,8 +221,8 @@ namespace Parking_Management_Program
 
         public long GetFee(Car car)
         {
-            long fee;
-            fee = ((car.ExitTime.Subtract(car.EnterTime)).Hours) * 2000;
+            TimeSpan parkingTime = car.GetParkingTime();
+            long fee = (parkingTime.Hours+2) * 2000;
             return fee;
         }
 
@@ -419,7 +419,7 @@ namespace Parking_Management_Program
             }
             Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
             car.ExitTime = DateTime.Now;
-            // GetFee
+            GetFee(car);
             // Pay
             // AddRecord
             this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
