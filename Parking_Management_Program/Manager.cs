@@ -175,12 +175,6 @@ namespace Parking_Management_Program
             }
         }
 
-        public long GetFee(Car car)
-        {
-            TimeSpan parkingTime = car.GetParkingTime();
-            long fee = (parkingTime.Hours +1) * 2000;
-            return fee;
-        }
 
         public void ChargeUserMoney()
         {
@@ -327,7 +321,7 @@ namespace Parking_Management_Program
             Console.WriteLine($"출차시간\t: {car.ExitTime}");
             Console.WriteLine($"총 주차시간\t: {car.GetParkingTime()}");
             Console.WriteLine("------------------------------------------");
-            Console.WriteLine($"요금\t\t: {GetFee(car)}원");
+            Console.WriteLine($"요금\t\t: {car.GetFee()}원");
             Console.WriteLine("==========================================");
         }
 
@@ -397,7 +391,20 @@ namespace Parking_Management_Program
             } while (!utils.CheckCarType(carType));
 
             enterTime = DateTime.Now;
-            Car enterCar = new Car(carNum, carType, enterTime);
+            Car enterCar;
+            if(carType == "소형")
+            {
+                enterCar = new CompactCar(carNum, enterTime);
+            }
+            else if(carType == "중형")
+            {
+                enterCar = new MidsizedCar(carNum, enterTime);
+            }
+            else
+            {
+                enterCar = new FullsizedCar(carNum, enterTime);
+            }
+
             parkingStatus[i, j] = enterCar;
             Console.WriteLine(">> 입차 처리가 완료되었습니다.");
             printEnterInfo(enterCar, i, j);
@@ -415,7 +422,7 @@ namespace Parking_Management_Program
             }
             Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
             car.ExitTime = DateTime.Now;
-            car.Fee = GetFee(car);
+            car.Fee = car.GetFee();
             Pay(car);
             AddRecord(car);
             this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
@@ -442,7 +449,9 @@ namespace Parking_Management_Program
         public void PrintFeeTable()
         {
             Console.WriteLine("========= 요 금 표 =========");
-            Console.WriteLine("   1시간  :  2 0 0 0 원");
+            Console.WriteLine(" 1시간 (소형)  :  2 0 0 0 원");
+            Console.WriteLine(" 1시간 (중형)  :  2 5 0 0 원");
+            Console.WriteLine(" 1시간 (대형)  :  3 0 0 0 원");
             Console.WriteLine("===========================");
         }
 
@@ -486,27 +495,10 @@ namespace Parking_Management_Program
             return count;
         }
 
-        //public Tuple<int, int> getParkedCarSpace(string carNum)
-        //{
-        //    for (int i = 0; i < parkingStatus.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < parkingStatus.GetLength(1); j++)
-        //        {
-        //            if (parkingStatus[i, j].CarNum == carNum)
-        //            {
-        //                Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
-        //                return new Tuple<int, int>(i, j);
-        //            }
-        //        }
-        //    }
-        //    Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
-        //    return null;
-        //}
-
         public void Pay(Car car)
         {
             string carNum = car.CarNum;
-            long fee = this.GetFee(car);
+            long fee = car.GetFee();
 
             if (this.userList.ContainsKey(carNum))
             {

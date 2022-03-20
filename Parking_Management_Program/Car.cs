@@ -7,48 +7,89 @@ using System.Threading.Tasks;
 namespace Parking_Management_Program
 {
     [Serializable]
-    public class Car
+    public abstract class Car
     {
 
-        private string carNum;
-        private string carType;
-        private DateTime enterTime;
-        private DateTime exitTime;
+        protected string carNum;
+        protected DateTime enterTime;
+        protected DateTime exitTime;
         #region 추가
-        private long fee;
+        protected long fee;
+        protected long feePerHour;
         //private Utils utils;
         #endregion
 
         #region property
         public string CarNum { get { return carNum; } set { carNum = value; } }
-        public string CarType { get { return carType; } set { carType = value; } }
         public DateTime EnterTime { get { return enterTime; } set { enterTime = value; } }
         public DateTime ExitTime { get { return exitTime; } set { exitTime = value; } }
         public long Fee { get { return fee; } set { fee = value; } }
         #endregion
 
-        public Car(string catNum, string carType, DateTime enterTime) // delete exitTime
+        public Car(string carNum, DateTime enterTime)
         {
-            this.carNum = catNum;
-            this.carType = carType;
+            this.carNum = carNum;
             this.enterTime = enterTime;
         }
-        //요것은 무엇인가요?
-        //public void SearchParkedCar()
-        //{
-        //    this.exitTime = exitTime;
-        //    this.utils = new Utils();
-        //}
         #region
-        public override string ToString()
-        {
-            return $"차량번호 : {carNum} | 차종 : {carType} | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
-        }
+
         public TimeSpan GetParkingTime()
         {
             TimeSpan time = exitTime.Subtract(enterTime);
             return time;
         }
+
+        public long GetFee()
+        {
+            TimeSpan parkingTime = GetParkingTime();
+            long fee = (parkingTime.Hours + 1) * feePerHour;
+            return fee;
+        }
+
         #endregion
+    }
+
+    [Serializable]
+    public class CompactCar : Car
+    {
+        public CompactCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
+        {
+            this.feePerHour = 2000;
+        }
+
+        public override string ToString()
+        {
+            return $"차량번호 : {carNum} | 차종 : 소형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
+        }
+    }
+
+    [Serializable]
+    public class MidsizedCar : Car
+    {
+        public MidsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
+        {
+            this.feePerHour = 2500;
+        }
+
+        public override string ToString()
+        {
+            return $"차량번호 : {carNum} | 차종 : 중형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
+        }
+
+    }
+
+    [Serializable]
+    public class FullsizedCar : Car
+    {
+        public FullsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
+        {
+            this.feePerHour = 3000;
+        }
+
+        public override string ToString()
+        {
+            return $"차량번호 : {carNum} | 차종 : 대형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
+        }
+
     }
 }
