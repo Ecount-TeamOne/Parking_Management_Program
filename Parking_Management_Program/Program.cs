@@ -31,7 +31,6 @@ namespace Parking_Management_Program
         public long Fee { get { return fee; } set { fee = value; } }
         #endregion
 
-
         public Car(string catNum, string carType, DateTime enterTime) // delete exitTime
         {
             this.carNum = catNum;
@@ -64,7 +63,8 @@ namespace Parking_Management_Program
         private Dictionary<string, User> userList;
         private const string ADMIN_ID = "root";
         private const string ADMIN_PW = "rootpw";
-        Utils utils;
+        private Utils utils;
+
         public Manager()
         {
             parkingStatus = new Car[10, 10];
@@ -221,8 +221,8 @@ namespace Parking_Management_Program
 
         public long GetFee(Car car)
         {
-            long fee;
-            fee = ((car.ExitTime.Subtract(car.EnterTime)).Hours) * 2000;
+            TimeSpan parkingTime = car.GetParkingTime();
+            long fee = parkingTime.Hours * 2000;
             return fee;
         }
 
@@ -347,6 +347,13 @@ namespace Parking_Management_Program
             Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
         }
 
+        public void PrintFeeTable()
+        {
+            Console.WriteLine("========= 요 금 표 =========");
+            Console.WriteLine("1 0 분  :  1 0 0 0 원");
+            Console.WriteLine("============================");
+        }
+
         public void PrintReceipt(Car car)
         {
             Console.WriteLine("================= 영수증 =================");
@@ -359,7 +366,6 @@ namespace Parking_Management_Program
             Console.WriteLine("==========================================");
         }
 
-        /////////////////////////////////
         public void Enter()
         {
             string inputLoc;
@@ -434,21 +440,21 @@ namespace Parking_Management_Program
 
         public void Exit()
         {
-            string carNum;
-            Tuple<int, int> carSpace;
-            Console.Write($"\n출차할 차량번호를 입력하세요 :");
-            // 입력 정규식 표현으로 확인 및 예외 처리
-            carNum = Console.ReadLine();
-            carSpace = getParkedCarLoc(carNum);
+            string carNum = utils.InputCarNum();
+            Tuple<int, int> carSpace = getParkedCarSpace(carNum);
+
             if (carSpace == null)
             {
-                Console.WriteLine("초기 메뉴로 이동합니다.");
+                Console.WriteLine("존재하지 않는 차량번호입니다.");
                 return;
             }
-            Car exitCar = parkingStatus[carSpace.Item1, carSpace.Item2];
-            exitCar.ExitTime = DateTime.Now;
-            PrintReceipt(exitCar);
-
+            Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
+            car.ExitTime = DateTime.Now;
+            car.Fee = GetFee(car);
+            Pay(car);
+            // AddRecord
+            this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
+            Console.WriteLine("출차가 완료되었습니다.");
         }
 
         public bool isParkinglotFull()
@@ -516,7 +522,38 @@ namespace Parking_Management_Program
         }
         public void Pay(Car car)
         {
+            string carNum = car.CarNum;
+            long fee = this.GetFee(car);
 
+            if (this.userList.ContainsKey(carNum))
+            {
+                Console.WriteLine("********* 회 원 입 니 다 *********");
+                User user = userList[carNum];
+
+                if (user.UserMoney >= fee)
+                {
+                    user.UserMoney -= fee;
+                    Console.WriteLine($"차 감  적 립 금 : {fee}");
+                    Console.WriteLine($"남 은  적 립 금 : {user.UserMoney}");
+                }
+                else
+                {
+                    long diffMoney = fee - user.UserMoney;
+                    user.UserMoney = 0;
+                    Console.WriteLine($"적 립 금 이  {diffMoney} 원  부 족 합 니 다");
+                    Console.Write("차 액 을  넣 어 주 세 요 : ");
+                    utils.InsertMoney(diffMoney);
+                }
+            }
+            else
+            {
+                Console.WriteLine("********* 비 회 원 입 니 다 *********");
+                Console.WriteLine($"요 금 은  {fee} 원  입 니 다");
+                Console.Write("돈 을  넣 어 주 세 요 : ");
+                utils.InsertMoney(fee);
+            }
+
+            PrintReceipt(car);
         }
 
     }
@@ -568,6 +605,41 @@ namespace Parking_Management_Program
         {
             return Regex.IsMatch(location, @"^[A-J]-([1-9]|10)$");
         }
+
+        public string InputCarNum()
+        {
+            string carNum;
+            do
+            {
+                Console.Write("차 량 번 호 를  입 력 해 주 세 요 : ");
+                carNum = Console.ReadLine();
+
+            } while (!CheckCarNum(carNum));
+            return carNum;
+        }
+
+        public void InsertMoney(long fee)
+        {
+            long money;
+
+            while (true)
+            {
+                money = long.Parse(Console.ReadLine());
+
+                if (money < fee)
+                {
+                    Console.Write("돈 이  부 족 합 니 다. 다 시  넣 어 주 세 요 : ");
+                }
+                else if (money >= fee)
+                {
+                    Console.WriteLine($"거 스 름 돈 : {money - fee} 원");
+                    break;
+                }
+            }
+            Console.WriteLine("감 사 합 니 다 .  안 녕 히  가 세 요 .");
+        }
+
+
         #endregion
 
     }
@@ -577,10 +649,13 @@ namespace Parking_Management_Program
         static void Main(string[] args)
         {
             Manager bm = new Manager();
-            //bm.Run();
+          
             bm.Enter();
             bm.Enter();
-            bm.Enter();
+            bm.PrintParkingStatus();
+            bm.Exit();
+            bm.Exit();
+            bm.PrintParkingStatus();
         }
     }
 }
