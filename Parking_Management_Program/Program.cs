@@ -410,21 +410,20 @@ namespace Parking_Management_Program
 
         public void Exit()
         {
-            string carNum;
-            Tuple<int, int> carSpace;
-            Console.Write($"출차할 차량번호를 입력하세요 :");
-            // 입력 정규식 표현으로 확인 및 예외 처리
-            carNum = Console.ReadLine();
-            carSpace = getParkedCarSpace(carNum);
+            string carNum = utils.InputCarNum();
+            Tuple<int, int> carSpace = getParkedCarSpace(carNum);
             if (carSpace == null)
             {
-                Console.WriteLine("초기 메뉴로 이동합니다.");
+                Console.WriteLine("존재하지 않는 차량번호입니다.");
                 return;
             }
-            Car exitCar = parkingStatus[carSpace.Item1, carSpace.Item2];
-            exitCar.ExitTime = DateTime.Now;
-            PrintReceipt(exitCar);
-
+            Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
+            car.ExitTime = DateTime.Now;
+            // GetFee
+            // Pay
+            // AddRecord
+            this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
+            Console.WriteLine("출차가 완료되었습니다.");
         }
         public bool isParkinglotFull()
         {
@@ -451,7 +450,6 @@ namespace Parking_Management_Program
                     Car car = this.parkingStatus[i, j];
                     if (car != null && car.CarNum == carNum)
                     {
-                        Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
                         return new Tuple<int, int>(i, j);
                     }
                 }
@@ -538,6 +536,9 @@ namespace Parking_Management_Program
 
             bm.Enter();
             bm.Enter();
+            bm.PrintParkingStatus();
+            bm.Exit();
+            bm.Exit();
             bm.PrintParkingStatus();
 
         }
