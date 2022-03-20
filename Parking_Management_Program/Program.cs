@@ -24,6 +24,10 @@ namespace Parking_Management_Program
         private string carType;
         private DateTime enterTime;
         private DateTime exitTime;
+        #region 추가
+        private long fee;
+        private Utils utils;
+        #endregion
 
         public string CarNum { get => carNum; }
         public DateTime EnterTime { get => enterTime; }
@@ -35,24 +39,25 @@ namespace Parking_Management_Program
             this.carType = carType;
             this.enterTime = enterTime;
             this.exitTime = exitTime;
+            this.utils = new Utils();
         }
 
 
-        public string printCar()  // override string ToString()??
+        //public string printCar()  // override string ToString()??
+        //{
+        //    return string.Format($"차량번호 :{carNum}, 차종 : {carType}, 입차시간 : {enterTime},  입차시간 :  {exitTime}");
+        //}
+        #region
+        public override string ToString()
         {
-            return string.Format($"차량번호 :{carNum}, 차종 : {carType}, 입차시간 : {enterTime},  입차시간 :  {exitTime}");
+            return $"차량번호 : {carNum} | 차종 : {carType} | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
         }
-
-        public void Enter()
+        public TimeSpan GetParkingTime()
         {
-
+            TimeSpan time = exitTime.Subtract(enterTime);
+            return time;
         }
-
-        public void Exit()
-        {
-
-        }
-
+        #endregion
         public void PrintParkingStatus()
         {
             throw new NotImplementedException();
@@ -63,16 +68,16 @@ namespace Parking_Management_Program
             throw new NotImplementedException();
         }
 
-        public void PrintReceipt()
+        public void PrintReceipt(Car car)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();    
         }
     }
     [Serializable]
     class Manager : IParking
     {
         private Car[,] parkingStatus;
-        private Dictionary<string, Car> recordList;
+        private List<Car> recordList;
         private Dictionary<string, User> userList;
         private const string ADMIN_ID = "root";
         private const string ADMIN_PW = "rootpw";
@@ -80,7 +85,7 @@ namespace Parking_Management_Program
         public Manager()
         {
             parkingStatus = new Car[0, 0];
-            recordList = new Dictionary<string, Car>();
+            recordList = new List<Car>();
             userList = new Dictionary<string, User>();
         }
         public void Run()
@@ -118,11 +123,12 @@ namespace Parking_Management_Program
 
         private int selectMenu()
         {
-            Console.WriteLine("1. 로 그 인");
+            Console.WriteLine("1. 관 리 자 로 그 인");
             Console.WriteLine("2. 회 원 가 입");
             Console.WriteLine("3. 주 차 하 기");
             Console.WriteLine("4. 출 차 하 기");
             Console.WriteLine("5. 적 립 금 조 회");
+            Console.WriteLine("6. 적 립 금 충 전");
             Console.WriteLine("0. 종 료");
             int key = int.Parse(Console.ReadLine());
             return key;
@@ -131,6 +137,7 @@ namespace Parking_Management_Program
         {
             Console.WriteLine("1. 정산목록 조회");
             Console.WriteLine("2. 주차차량 검색");
+            Console.WriteLine("3. 주차차량 현황");
             Console.WriteLine("3. 주차차량 현황");
             int key = int.Parse(Console.ReadLine());
             return key;
@@ -209,15 +216,19 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("records.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    Dictionary<string, Car> recordList = (Dictionary<string, Car>)formatter.Deserialize(stream);    //serialize 해제 후 지정
+                    List<Car> recordList = (List<Car>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
             }
             if (File.Exists("users.txt"))
             {
-                using (Stream stream = new FileStream("users.txt", FileMode.Open, FileAccess.ReadWrite))
+                using (Stream stream = new FileStream("users.txt", FileMode.Open))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     Dictionary<string, User> userList = (Dictionary<string, User>)formatter.Deserialize(stream);    //serialize 해제 후 지정
+                }
+                foreach(var user in userList)
+                {
+                    Console.WriteLine(user);
                 }
             }
 
@@ -230,7 +241,6 @@ namespace Parking_Management_Program
             fee = ((car.ExitTime.Subtract(car.EnterTime)).Hours) * 2000;
             return fee;
         }
-
 
         public void Pay()
         {
@@ -352,10 +362,18 @@ namespace Parking_Management_Program
             }
         }
 
-        public void PrintReceipt()
+        public void PrintReceipt(Car car)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("================= 영수증 =================");
+            Console.WriteLine($"차량번호\t: {car.CarNum}");
+            Console.WriteLine($"입차시간\t: {car.EnterTime}");
+            Console.WriteLine($"출차시간\t: {car.ExitTime}");
+            Console.WriteLine($"총 주차시간\t: {car.GetParkingTime()}");
+            Console.WriteLine("------------------------------------------");
+            Console.WriteLine($"요금\t\t: {GetFee(car)}원");
+            Console.WriteLine("==========================================");
         }
+
     }
     [Serializable]
     class User
