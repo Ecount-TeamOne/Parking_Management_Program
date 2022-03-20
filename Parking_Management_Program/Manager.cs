@@ -155,7 +155,7 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("parkingLot.txt", FileMode.Open))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    Car[,] parkingStatus = (Car[,])formatter.Deserialize(stream);    //serialize 해제 후 지정
+                    this.parkingStatus = (Car[,])formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
             }
             if (File.Exists("records.txt"))
@@ -163,7 +163,7 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("records.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    List<Car> recordList = (List<Car>)formatter.Deserialize(stream);    //serialize 해제 후 지정
+                    this.recordList = (List<Car>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
             }
             if (File.Exists("users.txt"))
@@ -171,15 +171,10 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("users.txt", FileMode.Open))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    Dictionary<string, User> userList = (Dictionary<string, User>)formatter.Deserialize(stream);    //serialize 해제 후 지정
+                    this.userList = (Dictionary<string, User>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
-                foreach (var user in userList)
-                {
-                    Console.WriteLine(user);
-                }
+
             }
-
-
         }
 
         public long GetFee(Car car)
@@ -187,11 +182,6 @@ namespace Parking_Management_Program
             TimeSpan parkingTime = car.GetParkingTime();
             long fee = parkingTime.Hours * 2000;
             return fee;
-        }
-
-        public void Pay()
-        {
-
         }
 
         public void ChargeUserMoney()
@@ -408,7 +398,7 @@ namespace Parking_Management_Program
             car.ExitTime = DateTime.Now;
             car.Fee = GetFee(car);
             Pay(car);
-            // AddRecord
+            AddRecord(car);
             this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
             Console.WriteLine("출차가 완료되었습니다.");
         }
@@ -433,8 +423,8 @@ namespace Parking_Management_Program
         public void PrintFeeTable()
         {
             Console.WriteLine("========= 요 금 표 =========");
-            Console.WriteLine("1시간  :  2 0 0 0 원");
-            Console.WriteLine("============================");
+            Console.WriteLine("   1시간  :  2 0 0 0 원");
+            Console.WriteLine("===========================");
         }
 
         public void printEnterInfo(Car car, int i, int j)
