@@ -14,6 +14,7 @@ namespace Parking_Management_Program
         private Car[,] parkingStatus;
         private List<Car> recordList;
         private Dictionary<string, User> userList;
+        private Dictionary<string, DateTime> longNonExitList;
         private const string ADMIN_ID = "root";
         private const string ADMIN_PW = "rootpw";
         private Utils utils;
@@ -23,6 +24,7 @@ namespace Parking_Management_Program
             parkingStatus = new Car[10, 10];
             recordList = new List<Car>();
             userList = new Dictionary<string, User>();
+            longNonExitList = new Dictionary<string, DateTime>();
             utils = new Utils();
         }
         public void Run()
@@ -70,6 +72,7 @@ namespace Parking_Management_Program
             Console.WriteLine("1. 정산목록 조회");
             Console.WriteLine("2. 주차차량 검색");
             Console.WriteLine("3. 주차차량 현황");
+            Console.WriteLine("4. 장기미출차목록 조회");
             Console.WriteLine("0. 이 전 메 뉴");
             int key = int.Parse(Console.ReadLine());
             return key;
@@ -126,6 +129,13 @@ namespace Parking_Management_Program
                     case 3:
                         PrintParkingStatus();
                         break;
+                    case 4:
+                        ShowLongNonExitList();
+                        break;
+                    case 5:
+                        // 장기미출차 테스트용
+                        test();
+                        break;
                     default:
                         Console.WriteLine("잘못 선택하였습니다.");
                         break;
@@ -151,6 +161,80 @@ namespace Parking_Management_Program
                     Console.WriteLine(record);  //tostring 출력
                 }
             }
+        }
+
+        private void UpdateLongNonExitList() // 장기미출차(7일 초과) 리스트 갱신
+        {
+            // 나간 차량은 리스트에서 제거
+            Dictionary<string, DateTime> longNonExitListCopy = new Dictionary<string, DateTime>();
+            foreach (var car in longNonExitList)
+            {
+                longNonExitListCopy.Add(car.Key, car.Value);
+            }
+            foreach (var car in longNonExitListCopy)
+            {
+                if (getParkedCarLoc(car.Key) == null)
+                {
+                    this.longNonExitList.Remove(car.Key);
+                }
+            }
+
+            // 장기 미출차 차량을 리스트에 추가
+            for (int i = 0; i < this.parkingStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.parkingStatus.GetLength(1); j++)
+                {
+                    if (this.parkingStatus[i, j] != null)
+                    {
+                        Car car = this.parkingStatus[i, j];
+                        TimeSpan parkingTime = DateTime.Now.Subtract(car.EnterTime);
+                        if (parkingTime.Days > 7 && !this.longNonExitList.ContainsKey(car.CarNum))
+                        {
+                            this.longNonExitList.Add(car.CarNum, car.EnterTime);
+                        }
+                    }
+                }
+            }
+
+            using (Stream stream = new FileStream("LongNonExitList.txt", FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, this.longNonExitList);
+            }
+        }
+
+        public void ShowLongNonExitList()
+        {
+            UpdateLongNonExitList();
+
+            if (File.Exists("LongNonExitList.txt"))
+            {
+                using (Stream stream = new FileStream("LongNonExitList.txt", FileMode.Open))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    this.longNonExitList = (Dictionary<string, DateTime>)formatter.Deserialize(stream);
+                }
+            }
+
+            if (longNonExitList.Count > 0)
+            {
+                foreach (var car in longNonExitList)
+                {
+                    Console.WriteLine($"차량번호 : {car.Key} | 입차시간 : {car.Value}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("장 기 미 출 차 차 량 이  없 습 니 다 .");
+            }
+        }
+
+        // 장기미출차 테스트용
+        public void test()
+        {
+            string carNum = utils.InputCarNum();
+            var loc = getParkedCarLoc(carNum);
+            parkingStatus[loc.Item1, loc.Item2].EnterTime = new DateTime(2022, 03, 11, 00, 00, 00);
         }
 
         private void SaveData()
