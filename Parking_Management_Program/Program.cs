@@ -67,25 +67,24 @@ namespace Parking_Management_Program
             throw new NotImplementedException();
         }
     }
-
+    [Serializable]
     class Manager : IParking
     {
         private Car[,] parkingStatus;
         private Dictionary<string, Car> recordList;
         private Dictionary<string, User> userList;
-        private readonly string ADMIN_ID;
-        private readonly string ADMIN_PW;
+        private const string ADMIN_ID = "root";
+        private const string ADMIN_PW = "rootpw";
 
         public Manager()
         {
             parkingStatus = new Car[0, 0];
             recordList = new Dictionary<string, Car>();
             userList = new Dictionary<string, User>();
-
         }
         public void Run()
         {
-            LoadData();
+            //LoadData();
 
             int key = 0;
             while ((key = selectMenu()) != 0)
@@ -112,14 +111,12 @@ namespace Parking_Management_Program
                         break;
                 }
             }
-            SaveData();
+            //SaveData();
             Console.WriteLine("종료합니다...");
         }
 
         private int selectMenu()
         {
-
-            //Console.WriteLine("1:추가 2:삭제 3:검색 4:차량 목록 5:Car 현황 0:종료");
             Console.WriteLine("1. 로 그 인");
             Console.WriteLine("2. 회 원 가 입");
             Console.WriteLine("3. 주 차 하 기");
@@ -192,36 +189,37 @@ namespace Parking_Management_Program
             using (Stream stream = new FileStream("users.txt", FileMode.Create))  
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this.recordList);
+                formatter.Serialize(stream, this.userList);
             }
-            //using (Stream stream = new FileStream("car.txt", FileMode.Append))    //있으면 추가모드로 저장
-            //{
-            //    BinaryFormatter formatter = new BinaryFormatter();
-            //    formatter.Serialize(stream, this.recordList);   //serialize해서 저장
-            //} //불러오기 안할 경우에만 append쓰는게 맞지않나...
+            
         }
         private void LoadData()
         {
-            if (File.Exists("parkingLot.txt")&& File.Exists("records.txt") && File.Exists("users.txt"))
+            if (File.Exists("parkingLot.txt"))
             {
-                using (Stream stream = new FileStream("parkingLot.txt", FileMode.Open, FileAccess.Read))
+                using (Stream stream = new FileStream("parkingLot.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     Car[,] parkingStatus = (Car[,])formatter.Deserialize(stream);    //serialize 해제 후 지정
-                    //parkingStatus = (Car[,])formatter.Deserialize(stream);    //직접 지정은 안될까? 나중에 시험 >> 안됨
-
                 }
-                using (Stream stream = new FileStream("records.txt", FileMode.Open))
+            }
+            if (File.Exists("records.txt"))
+            {
+                using (Stream stream = new FileStream("records.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     Dictionary<string, Car> recordList = (Dictionary<string, Car>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
-                using (Stream stream = new FileStream("users.txt", FileMode.Open))
+            }
+            if (File.Exists("users.txt"))
+            {
+                using (Stream stream = new FileStream("users.txt", FileMode.Open, FileAccess.ReadWrite))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     Dictionary<string, User> userList = (Dictionary<string, User>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
             }
+
 
         }
 
@@ -235,17 +233,43 @@ namespace Parking_Management_Program
 
         public void Pay()
         {
-
+            
         }
 
         public void ChargeUserMoney()
         {
-
+            long addUserMoney;
+            Console.WriteLine("차량번호를 입력해주세요");
+            string carNum = Console.ReadLine();
+            if (this.userList.ContainsKey(carNum))
+            {
+                
+                Console.Write("충 전 하 실  금 액 을  입 력 해 주 세 요. ");
+                addUserMoney = long.Parse(Console.ReadLine());
+                this.userList[carNum].UserMoney += addUserMoney;
+                Console.WriteLine($"{addUserMoney} 원 이  정 상 적 으 로  충 전 되 었 습 니 다. ");
+            }
+            else
+            {
+                Console.WriteLine("회 원 이  아 닙 니 다 .");
+                Console.WriteLine("회 원 가 입 후,  사 용 해 주 세 요 . ");
+            }
         }
 
         public void ShowUserMoneyList()
         {
+            Console.WriteLine("차량번호를 입력해주세요");
+            string carNum = Console.ReadLine();
+            if (this.userList.ContainsKey(carNum))
+            {
+                Console.WriteLine($"회 원 님 의   잔 액 은 . . . {this.userList[carNum].UserMoney}  원  입 니 다 . ");
 
+            }
+            else
+            {
+                Console.WriteLine("회 원 이  아 닙 니 다 .");
+                Console.WriteLine("회 원 가 입 후,  사 용 해 주 세 요 . ");
+            }
         }
 
         public void Login()
@@ -350,6 +374,9 @@ namespace Parking_Management_Program
             this.phoneNum = phoneNum;
 
         }
+
+        public string CarNum { get => carNum; }
+        public long UserMoney { get => userMoney; set => userMoney = value; }
     }
 
     class Utils
