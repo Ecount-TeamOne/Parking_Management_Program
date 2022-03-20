@@ -24,6 +24,7 @@ namespace Parking_Management_Program
         #endregion
 
         public string CarNum { get => carNum; }
+        public long Fee { set => fee = value; }
         public DateTime EnterTime { get => enterTime; }
         public DateTime ExitTime { 
             get => exitTime;
@@ -222,7 +223,7 @@ namespace Parking_Management_Program
         public long GetFee(Car car)
         {
             TimeSpan parkingTime = car.GetParkingTime();
-            long fee = (parkingTime.Hours+2) * 2000;
+            long fee = parkingTime.Hours * 2000;
             return fee;
         }
 
@@ -419,8 +420,8 @@ namespace Parking_Management_Program
             }
             Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
             car.ExitTime = DateTime.Now;
-            GetFee(car);
-            // Pay
+            car.Fee = GetFee(car);
+            Pay(car);
             // AddRecord
             this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
             Console.WriteLine("출차가 완료되었습니다.");
@@ -459,7 +460,38 @@ namespace Parking_Management_Program
 
         public void Pay(Car car)
         {
+            string carNum = car.CarNum;
+            long fee = this.GetFee(car);
 
+            if (this.userList.ContainsKey(carNum))
+            {
+                Console.WriteLine("********* 회 원 입 니 다 *********");
+                User user = userList[carNum];
+
+                if (user.UserMoney >= fee)
+                {
+                    user.UserMoney -= fee;
+                    Console.WriteLine($"차 감  적 립 금 : {fee}");
+                    Console.WriteLine($"남 은  적 립 금 : {user.UserMoney}");
+                }
+                else
+                {
+                    long diffMoney = fee - user.UserMoney;
+                    user.UserMoney = 0;
+                    Console.WriteLine($"적 립 금 이  {diffMoney} 원  부 족 합 니 다");
+                    Console.Write("차 액 을  넣 어 주 세 요 : ");
+                    utils.InsertMoney(diffMoney);
+                }
+            }
+            else
+            {
+                Console.WriteLine("********* 비 회 원 입 니 다 *********");
+                Console.WriteLine($"요 금 은  {fee} 원  입 니 다");
+                Console.Write("돈 을  넣 어 주 세 요 : ");
+                utils.InsertMoney(fee);
+            }
+
+            PrintReceipt(car);
         }
 
     }
