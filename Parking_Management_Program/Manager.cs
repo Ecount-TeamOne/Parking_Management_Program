@@ -77,11 +77,11 @@ namespace Parking_Management_Program
         {
             Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
             Console.WriteLine("│                                    관 리 자 메 뉴                                   │");
-            Console.WriteLine("│                                  1. 정산목록 조회                                   │");
-            Console.WriteLine("│                                  2. 주차차량 검색                                   │");
-            Console.WriteLine("│                                  3. 주차차량 현황                                   │");
+            Console.WriteLine("│                                  1. 정 산 목 록  조 회                              │");
+            Console.WriteLine("│                                  2. 주 차 차 량  검 색                              │");
+            Console.WriteLine("│                                  3. 주 차 차 량  현 황                              │");
             Console.WriteLine("│                                  4. 장기미출차목록 조회                             │");
-            Console.WriteLine("│                                  0. 이 전 메 뉴                                     │");
+            Console.WriteLine("│                                  0. 이  전  메  뉴                                  │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
             int key = int.Parse(Console.ReadLine());
@@ -252,24 +252,9 @@ namespace Parking_Management_Program
 
         private void SaveData()
         {
-
-            using (Stream stream = new FileStream("parkingLot.txt", FileMode.Create))   //주차 현 상태 저장
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this.parkingStatus);
-            }
-
-            using (Stream stream = new FileStream("records.txt", FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this.recordList);   //serialize해서 저장
-            }
-            using (Stream stream = new FileStream("users.txt", FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this.userList);
-            }
-
+            utils.ListToFile(this.parkingStatus, "parkingLot.txt");
+            utils.ListToFile(this.recordList, "records.txt");
+            utils.ListToFile(this.userList, "users.txt");
         }
         private void LoadData()
         {
@@ -296,7 +281,6 @@ namespace Parking_Management_Program
                     BinaryFormatter formatter = new BinaryFormatter();
                     this.userList = (Dictionary<string, User>)formatter.Deserialize(stream);    //serialize 해제 후 지정
                 }
-
             }
         }
 
