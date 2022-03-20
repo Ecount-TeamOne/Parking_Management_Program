@@ -125,10 +125,6 @@ namespace Parking_Management_Program
             }
         }
 
-        //public void RemoveRecord()
-        //{
-
-        //}
         private void SaveData()
         {
 
