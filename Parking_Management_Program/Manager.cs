@@ -209,11 +209,7 @@ namespace Parking_Management_Program
                 }
             }
 
-            using (Stream stream = new FileStream("LongNonExitList.txt", FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this.longNonExitList);
-            }
+            utils.ListToFile(this.longNonExitList, "LongNonExitList.txt");
         }
 
         public void ShowLongNonExitList()
