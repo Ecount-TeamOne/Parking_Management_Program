@@ -30,8 +30,10 @@ namespace Parking_Management_Program
             LoadData();
 
             int key = 0;
+            
             while ((key = selectMenu()) != 0)
             {
+                
                 switch (key)
                 {
                     case 1:
@@ -47,7 +49,7 @@ namespace Parking_Management_Program
                         Exit();
                         break;
                     default:
-                        Console.WriteLine("잘못 선택하였습니다.");
+                        Console.WriteLine("잘 못  선 택 하 였 습 니 다.");
                         break;
                 }
             }
@@ -57,31 +59,42 @@ namespace Parking_Management_Program
 
         private int selectMenu()
         {
-            Console.WriteLine("1. 로 그 인");
-            Console.WriteLine("2. 회 원 가 입");
-            Console.WriteLine("3. 주 차 하 기");
-            Console.WriteLine("4. 출 차 하 기");
-            Console.WriteLine("0. 종 료");
+            Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
+            Console.WriteLine("│                            주 차 장 관 리  프 로 그 램                              │");
+            Console.WriteLine("│                                  1. 로 그 인                                        │");
+            Console.WriteLine("│                                  2. 회 원 가 입                                     │");
+            Console.WriteLine("│                                  3. 주 차 하 기                                     │");
+            Console.WriteLine("│                                  4. 출 차 하 기                                     │");
+            Console.WriteLine("│                                  0. 종 료                                           │");
+            Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
+            Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
             int key = int.Parse(Console.ReadLine());
             return key;
         }
         private int managerMenu()
         {
-            Console.WriteLine("1. 정산목록 조회");
-            Console.WriteLine("2. 주차차량 검색");
-            Console.WriteLine("3. 주차차량 현황");
-            Console.WriteLine("0. 이 전 메 뉴");
+            Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
+            Console.WriteLine("│                                    관 리 자 메 뉴                                   │");
+            Console.WriteLine("│                                  1. 정산목록 조회                                   │");
+            Console.WriteLine("│                                  2. 주차차량 검색                                   │");
+            Console.WriteLine("│                                  3. 주차차량 현황                                   │");
+            Console.WriteLine("│                                  0. 이 전 메 뉴                                     │");
+            Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
+            Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
             int key = int.Parse(Console.ReadLine());
             return key;
         }
         private int UserMenu()
         {
-
-            Console.WriteLine("1. 적 립 금 조 회");
-            Console.WriteLine("2. 적 립 금 충 전");
-            Console.WriteLine("3. 주 차 하 기");
-            Console.WriteLine("4. 출 차 하 기");
-            Console.WriteLine("0. 이 전 메 뉴");
+            Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
+            Console.WriteLine("│                                   회 원 메 뉴                                       │");
+            Console.WriteLine("│                                  1. 적 립 금 조 회                                  │");
+            Console.WriteLine("│                                  2. 적 립 금 충 전                                  │");
+            Console.WriteLine("│                                  3. 주 차 하 기                                     │");
+            Console.WriteLine("│                                  4. 출 차 하 기                                     │");
+            Console.WriteLine("│                                  0. 이 전 메 뉴                                     │");
+            Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
+            Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
             int key = int.Parse(Console.ReadLine());
             return key;
         }
@@ -105,7 +118,7 @@ namespace Parking_Management_Program
                         Exit();
                         break;
                     default:
-                        Console.WriteLine("잘못 선택하였습니다.");
+                        Console.WriteLine("[잘 못  선 택 하 였 습 니 다 . ]");
                         break;
                 }
             }
@@ -127,7 +140,7 @@ namespace Parking_Management_Program
                         PrintParkingStatus();
                         break;
                     default:
-                        Console.WriteLine("잘못 선택하였습니다.");
+                        Console.WriteLine("[잘 못  선 택 하 였 습 니 다 . ]");
                         break;
                 }
             }
@@ -142,7 +155,7 @@ namespace Parking_Management_Program
         {
             if (recordList.Count == 0)
             {
-                Console.WriteLine("표시할 기록이 없습니다.");
+                Console.WriteLine("[ 표 시 할  기 록 이  없 습 니 다 . ]");
             }
             else
             {
@@ -209,15 +222,15 @@ namespace Parking_Management_Program
             if (this.userList.ContainsKey(carNum))
             {
 
-                Console.Write("충 전 하 실  금 액 을  입 력 해 주 세 요. ");
+                Console.Write("[충 전 하 실  금 액 을  입 력 해 주 세 요. ]");
                 addUserMoney = long.Parse(Console.ReadLine());
                 this.userList[carNum].UserMoney += addUserMoney;
-                Console.WriteLine($"{addUserMoney} 원 이  정 상 적 으 로  충 전 되 었 습 니 다. ");
+                Console.WriteLine($"[{addUserMoney} 원 이  정 상 적 으 로  충 전 되 었 습 니 다. ]");
             }
             else
             {
-                Console.WriteLine("회 원 이  아 닙 니 다 .");
-                Console.WriteLine("회 원 가 입 후,  사 용 해 주 세 요 . ");
+                Console.WriteLine("[회 원 이  아 닙 니 다 . ]");
+                Console.WriteLine("[회 원 가 입 후,  사 용 해 주 세 요 . ]");
             }
         }
 
@@ -225,12 +238,12 @@ namespace Parking_Management_Program
         {
             if (this.userList.ContainsKey(carNum))
             {
-                Console.WriteLine($"회 원 님 의   잔 액 은 . . . {this.userList[carNum].UserMoney}  원  입 니 다 . ");
+                Console.WriteLine($"[회 원 님 의   잔 액 은 . . . {this.userList[carNum].UserMoney}  원  입 니 다 . ]");
             }
             else
             {
-                Console.WriteLine("회 원 이  아 닙 니 다 .");
-                Console.WriteLine("회 원 가 입 후,  사 용 해 주 세 요 . ");
+                Console.WriteLine("[회 원 이  아 닙 니 다 .]");
+                Console.WriteLine("[회 원 가 입 후,  사 용 해 주 세 요 . ]");
             }
         }
 
@@ -239,23 +252,23 @@ namespace Parking_Management_Program
             string id;
             string pw;
 
-            Console.Write("I D   입 력 (차 량 번 호  입 력) : ");
+            Console.Write("[I D   입 력 (차 량 번 호  입 력) : ]");
             id = Console.ReadLine();
-            Console.Write("비 밀 번 호  입 력 (핸 드 폰 번 호  입 력) : ");
+            Console.Write("[비 밀 번 호  입 력 (핸 드 폰 번 호  입 력) : ]");
             pw = Console.ReadLine();
             if (id == ADMIN_ID && pw == ADMIN_PW)
             {
-                Console.WriteLine("관 리 자 님  환 영 합 니 다.\n");
+                Console.WriteLine("[관 리 자 님  환 영 합 니 다.]\n");
                 ManagerSelect();
             }
             else if (userList.ContainsKey(id) && pw == userList[id].PhoneNum) // 수정 
             {
-                Console.WriteLine($"{userList[id].UserName} 님  환 영 합 니 다.\n");
+                Console.WriteLine($"[{userList[id].UserName} 님  환 영 합 니 다.]\n");
                 UserSelect(id);
             }
             else
             {
-                Console.WriteLine("정 보 가  잘 못 되 었 습 니 다 . \n");
+                Console.WriteLine("[정 보 가  잘 못 되 었 습 니 다 . ]\n");
             }
 
         }
@@ -268,24 +281,24 @@ namespace Parking_Management_Program
             string userNum;
             while (true)
             {
-                Console.WriteLine("회 원 가 입");
+                Console.WriteLine("[회 원 가 입]");
 
-                Console.Write("이 름 을  입 력 해 주 세 요 : ");
+                Console.Write("[이 름 을  입 력 해 주 세 요 : ]");
                 userName = Console.ReadLine();
 
-                Console.Write("차 량 번 호 를  입 력 해 주 세 요 : ");
+                Console.Write("[차 량 번 호 를  입 력 해 주 세 요 : ]");
                 carNum = Console.ReadLine();
 
                 if (!utils.CheckCarNum(carNum) || userList.ContainsKey(carNum))
                 {
-                    Console.WriteLine(">> 잘못된 차량번호입니다.\n");
+                    Console.WriteLine("[>> 잘못된 차량번호입니다. ]\n");
                     continue;
                 }
-                Console.Write("핸 드 폰 번 호 를  입 력 해 주 세 요 : ");
+                Console.Write("[핸 드 폰 번 호 를  입 력 해 주 세 요 : ]");
                 phoneNum = Console.ReadLine();
                 if (!utils.CheckPhoneNum(phoneNum))
                 {
-                    Console.WriteLine(">> 잘못된 핸드폰번호 입니다.\n");
+                    Console.WriteLine("[>> 잘못된 핸드폰번호 입니다. ]\n");
                     continue;
                 }
 
@@ -320,7 +333,7 @@ namespace Parking_Management_Program
         public void SearchParkedCar()
         {
             string carNum;
-            Console.Write("차 량 번 호 를  입 력 하 세 요 >> ");
+            Console.Write("[차 량 번 호 를  입 력 하 세 요 >> ]");
             carNum = Console.ReadLine();
             for (int i = 0; i < parkingStatus.GetLength(0); i++)
             {
@@ -332,13 +345,13 @@ namespace Parking_Management_Program
                     }
                     else if (parkingStatus[i, j].CarNum == carNum)
                     {
-                        Console.WriteLine($"해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ");
+                        Console.WriteLine($"[해 당 차 량 은  {(char)(i + 65)}-{j + 1}  에  주 차 되 어 있 습 니 다 . ]");
                         return;
                     }
 
                 }
             }
-            Console.WriteLine("현재 주차장에 입력한 차량번호가 존재하지 않습니다.");
+            Console.WriteLine("[현재 주차장에 입력한 차량번호가 존재하지 않습니다.]");
         }
 
         public void PrintReceipt(Car car)
@@ -362,7 +375,7 @@ namespace Parking_Management_Program
             // 만차 여부 확인
             if (isParkinglotFull())
             {
-                Console.WriteLine(">> 현재 만차로 주차가 불가능합니다. 초기 메뉴로 이동합니다.");
+                Console.WriteLine("[>> 현재 만차로 주차가 불가능합니다. 초기 메뉴로 이동합니다.]");
                 return;
             }
             // 요금 및 주차 현황 출력
@@ -372,12 +385,12 @@ namespace Parking_Management_Program
             // 주차 구역 입력
             while (true)
             {
-                Console.WriteLine("\n원하는 주차 자리를 입력해주세요! ex) A-2");
+                Console.WriteLine("\n[원하는 주차 자리를 입력해주세요! ex) A-2]");
                 inputLoc = Console.ReadLine();
                 // 입력 예외
                 if (!utils.CheckParkingLocation(inputLoc))
                 {
-                    Console.WriteLine(">> 잘못된 입력입니다. 구역-번호 양식으로 입력하세요.");
+                    Console.WriteLine("[>> 잘못된 입력입니다. 구역-번호 양식으로 입력하세요.]");
                     continue;
                 }
                 i = char.Parse(inputLoc.Split('-')[0]) - 'A';
@@ -385,28 +398,28 @@ namespace Parking_Management_Program
                 // 주차 가능 여부 확인
                 if (parkingStatus[i, j] != null)
                 {
-                    Console.WriteLine(">> 주차가 불가한 구역입니다.");
+                    Console.WriteLine("[>> 주차가 불가한 구역입니다.]");
                     continue;
                 }
-                Console.Write($">> 선택한 {(char)(i + 65)}-{j + 1}는 주차 가능한 자리입니다.");
+                Console.Write($"[>> 선택한 {(char)(i + 65)}-{j + 1}는 주차 가능한 자리입니다.]");
                 break;
             }
 
             // 차량 번호 입력
             while (true)
             {
-                Console.Write($"\n차량번호를 입력하세요 :");
+                Console.Write($"\n[차량번호를 입력하세요 :]");
                 carNum = Console.ReadLine();
                 // 입력 예외
                 if (!utils.CheckCarNum(carNum))
                 {
-                    Console.WriteLine(">> 잘못된 차량번호입니다.\n");
+                    Console.WriteLine("[>> 잘못된 차량번호입니다.]\n");
                     continue;
                 }
                 // 기주차 차량 여부 확인
                 if (getParkedCarLoc(carNum) != null)
                 {
-                    Console.WriteLine(">> 해당 차량은 이미 주차되어 있습니다. 초기 메뉴로 이동합니다.\n");
+                    Console.WriteLine("[>> 해당 차량은 이미 주차되어 있습니다. 초기 메뉴로 이동합니다.]\n");
                     return;
                 }
                 break;
@@ -414,7 +427,7 @@ namespace Parking_Management_Program
 
             do
             {
-                Console.Write("\n차종을 입력해주세요 [ 소형 | 중형 | 대형 ]: ");
+                Console.Write("\n[차종을 입력해주세요 [ 소형 | 중형 | 대형 ]: ]");
                 carType = Console.ReadLine();
             } while (!utils.CheckCarType(carType));
 
@@ -434,7 +447,7 @@ namespace Parking_Management_Program
             }
 
             parkingStatus[i, j] = enterCar;
-            Console.WriteLine(">> 입차 처리가 완료되었습니다.");
+            Console.WriteLine("[>> 입차 처리가 완료되었습니다.]");
             printEnterInfo(enterCar, i, j);
         }
 
@@ -445,7 +458,7 @@ namespace Parking_Management_Program
 
             if (carSpace == null)
             {
-                Console.WriteLine("존재하지 않는 차량번호입니다.");
+                Console.WriteLine("[존재하지 않는 차량번호입니다.]");
                 return;
             }
             Car car = this.parkingStatus[carSpace.Item1, carSpace.Item2];
@@ -454,7 +467,7 @@ namespace Parking_Management_Program
             Pay(car);
             AddRecord(car);
             this.parkingStatus[carSpace.Item1, carSpace.Item2] = null;
-            Console.WriteLine("출차가 완료되었습니다.");
+            Console.WriteLine("[출차가 완료되었습니다.]");
         }
 
         public bool isParkinglotFull()
@@ -536,23 +549,23 @@ namespace Parking_Management_Program
                 if (user.UserMoney >= fee)
                 {
                     user.UserMoney -= fee;
-                    Console.WriteLine($"차 감  적 립 금 : {fee}");
-                    Console.WriteLine($"남 은  적 립 금 : {user.UserMoney}");
+                    Console.WriteLine($"[차 감  적 립 금 : ]{fee}");
+                    Console.WriteLine($"[남 은  적 립 금 : ]{user.UserMoney}");
                 }
                 else
                 {
                     long diffMoney = fee - user.UserMoney;
                     user.UserMoney = 0;
-                    Console.WriteLine($"적 립 금 이  {diffMoney} 원  부 족 합 니 다");
-                    Console.Write("차 액 을  넣 어 주 세 요 : ");
+                    Console.WriteLine($"[적 립 금 이  {diffMoney} 원  부 족 합 니 다]");
+                    Console.Write("[차 액 을  넣 어 주 세 요 : ]");
                     utils.InsertMoney(diffMoney);
                 }
             }
             else
             {
                 Console.WriteLine("********* 비 회 원 입 니 다 *********");
-                Console.WriteLine($"요 금 은  {fee} 원  입 니 다");
-                Console.Write("돈 을  넣 어 주 세 요 : ");
+                Console.WriteLine($"[요 금 은  {fee} 원  입 니 다]");
+                Console.Write("[돈 을  넣 어 주 세 요 : ]");
                 utils.InsertMoney(fee);
             }
 
