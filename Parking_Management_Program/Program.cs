@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +85,7 @@ namespace Parking_Management_Program
         }
         public void Run()
         {
-            //LoadData();
+            LoadData();
 
             int key = 0;
             while ((key = selectMenu()) != 0)
@@ -111,7 +112,7 @@ namespace Parking_Management_Program
                         break;
                 }
             }
-            //SaveData();
+            SaveData();
             Console.WriteLine("종료합니다...");
         }
 
@@ -356,7 +357,7 @@ namespace Parking_Management_Program
             throw new NotImplementedException();
         }
     }
-
+    [Serializable]
     class User
     {
         private string carNum;
