@@ -25,7 +25,9 @@ namespace Parking_Management_Program
 
         }
 
-        public string CarNum { get => carNum; }
-        public long UserMoney { get => userMoney; set => userMoney = value; }
+        public string CarNum { get => this.carNum; }
+        public long UserMoney { get => this.userMoney; set => this.userMoney = value; }
+        public string PhoneNum { get => this.phoneNum; }
+        public string UserName { get => this.userName; }
     }
 }
