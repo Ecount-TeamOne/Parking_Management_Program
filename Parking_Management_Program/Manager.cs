@@ -47,7 +47,10 @@ namespace Parking_Management_Program
                         Exit();
                         break;
                     case 5:
-                        ShowUserMoneyList();
+                        ShowUserMoney();
+                        break;
+                    case 6:
+                        ChargeUserMoney();
                         break;
                     default:
                         Console.WriteLine("잘못 선택하였습니다.");
@@ -203,14 +206,13 @@ namespace Parking_Management_Program
             }
         }
 
-        public void ShowUserMoneyList()
+        public void ShowUserMoney()
         {
             Console.WriteLine("차량번호를 입력해주세요");
             string carNum = Console.ReadLine();
             if (this.userList.ContainsKey(carNum))
             {
                 Console.WriteLine($"회 원 님 의   잔 액 은 . . . {this.userList[carNum].UserMoney}  원  입 니 다 . ");
-
             }
             else
             {
@@ -245,14 +247,35 @@ namespace Parking_Management_Program
             string userName;
             string carNum;
             string phoneNum;
-            Console.WriteLine("회 원 가 입");
-            Console.Write("이 름 을  입 력 해 주 세 요 : ");
-            userName = Console.ReadLine();
-            Console.Write("차 량 번 호 를  입 력 해 주 세 요 : ");
-            carNum = Console.ReadLine();
-            Console.Write("핸 드 폰 번 호 를  입 력 해 주 세 요 : ");
-            phoneNum = Console.ReadLine();
-            userList.Add(carNum, new User(userName, carNum, 0, "", phoneNum));
+            string userNum;
+            while (true)
+            {
+                Console.WriteLine("회 원 가 입");
+
+                Console.Write("이 름 을  입 력 해 주 세 요 : ");
+                userName = Console.ReadLine();
+
+                Console.Write("차 량 번 호 를  입 력 해 주 세 요 : ");
+                carNum = Console.ReadLine();
+                
+                if (!utils.CheckCarNum(carNum) || userList.ContainsKey(carNum))
+                {
+                    Console.WriteLine(">> 잘못된 차량번호입니다.\n");
+                    continue;
+                }
+                Console.Write("핸 드 폰 번 호 를  입 력 해 주 세 요 : ");
+                phoneNum = Console.ReadLine();
+                if (!utils.CheckPhoneNum(phoneNum))
+                {
+                    Console.WriteLine(">> 잘못된 핸드폰번호 입니다.\n");
+                    continue;
+                }
+
+                userNum = DateTime.Now.ToString("yyyyMMddHHmmss");
+                userList.Add(carNum, new User(userName, carNum, 0, userNum, phoneNum));
+                break;
+            }
+
         }
 
         public void PrintParkingStatus()
