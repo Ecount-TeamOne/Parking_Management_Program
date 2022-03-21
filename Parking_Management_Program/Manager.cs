@@ -33,7 +33,7 @@ namespace Parking_Management_Program
 
             int key = 0;
             
-            while ((key = selectMenu()) != 0)
+            while ((key = SelectMenu()) != 0)
             {
                 
                 switch (key)
@@ -59,7 +59,7 @@ namespace Parking_Management_Program
             Console.WriteLine("종료합니다...");
         }
 
-        private int selectMenu()
+        private int SelectMenu()
         {
             Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
             Console.WriteLine("│                            주 차 장 관 리  프 로 그 램                              │");
@@ -73,7 +73,7 @@ namespace Parking_Management_Program
             int key = int.Parse(Console.ReadLine());
             return key;
         }
-        private int managerMenu()
+        private int ManagerMenu()
         {
             Console.WriteLine("┌─────────────────────────────────────────────────────────────────────────────────────┐");
             Console.WriteLine("│                                    관 리 자 메 뉴                                   │");
@@ -129,7 +129,7 @@ namespace Parking_Management_Program
         public void ManagerSelect()
         {
             int key = 0;
-            while ((key = managerMenu()) != 0)
+            while ((key = ManagerMenu()) != 0)
             {
                 switch (key)
                 {
