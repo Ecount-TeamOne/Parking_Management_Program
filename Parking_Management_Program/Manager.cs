@@ -82,6 +82,7 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                  3. 주 차 차 량  현 황                              │");
             Console.WriteLine("│                                  4. 장기미출차목록 조회                             │");
             Console.WriteLine("│                                  5. 회 원 목 록 조 회                               │");
+            Console.WriteLine("│                                  6. 차 량 목 록 조 회                               │");
             Console.WriteLine("│                                  0. 이  전  메  뉴                                  │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
@@ -150,9 +151,13 @@ namespace Parking_Management_Program
                         ShowUserList();
                         break;
                     case 6:
+                        ShowCarList();
+                        break;
+                    case 7:
                         //Test 용
                         Test();
                         break;
+
                     default:
                         Console.WriteLine("[잘 못  선 택 하 였 습 니 다 . ]");
                         break;
@@ -396,6 +401,33 @@ namespace Parking_Management_Program
             }
 
         }
+
+        public void ShowCarList()
+        {
+            if (ParkingCarCount() == 0)
+            {
+                Console.WriteLine("주차장에 차량이 없습니다.");
+            }
+            else
+            {
+                Console.WriteLine("======================================= 현재 주차 차량 목록 =======================================");
+
+                foreach (var car in parkingStatus)
+                {
+                    if (car != null)
+                    {
+                        Console.WriteLine($"차량번호 : {car.CarNum} | 입차시간 : {car.EnterTime}");
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                Console.WriteLine("===================================================================================================");
+            }
+
+        }
+
 
         public void PrintParkingStatus()
         {
