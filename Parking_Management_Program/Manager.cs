@@ -209,7 +209,7 @@ namespace Parking_Management_Program
                 }
             }
 
-            utils.ListToFile(this.longNonExitList, "LongNonExitList.txt");
+            utils.SaveFile(this.longNonExitList, "LongNonExitList.txt");
         }
 
         public void ShowLongNonExitList()
@@ -248,10 +248,11 @@ namespace Parking_Management_Program
 
         private void SaveData()
         {
-            utils.ListToFile(this.parkingStatus, "parkingLot.txt");
-            utils.ListToFile(this.recordList, "records.txt");
-            utils.ListToFile(this.userList, "users.txt");
+            utils.SaveFile(this.parkingStatus, "parkingLot.txt");
+            utils.SaveFile(this.recordList, "records.txt");
+            utils.SaveFile(this.userList, "users.txt");
         }
+
         private void LoadData()
         {
             if (File.Exists("parkingLot.txt"))

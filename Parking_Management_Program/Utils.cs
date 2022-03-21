@@ -69,7 +69,7 @@ namespace Parking_Management_Program
             Console.WriteLine("감 사 합 니 다 .  안 녕 히  가 세 요 .");
         }
 
-        public void ListToFile(ICollection list, string fileName)
+        public void SaveFile(ICollection list, string fileName)
         {
             using (Stream stream = new FileStream(fileName, FileMode.Create))
             {
