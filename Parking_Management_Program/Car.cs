@@ -57,7 +57,7 @@ namespace Parking_Management_Program
         public override long GetFee()
         {
             TimeSpan parkingTime = GetParkingTime();
-            long fee = (parkingTime.Hours + 1) * feePerHour;
+            long fee = (parkingTime.Days * 24 + parkingTime.Hours + 1) * feePerHour;
             return fee;
         }
     }
@@ -75,7 +75,7 @@ namespace Parking_Management_Program
         public override long GetFee()
         {
             TimeSpan parkingTime = GetParkingTime();
-            long fee = (long)((parkingTime.Hours + 1) * feePerHour * 1.1);
+            long fee = (long)((parkingTime.Days * 24 + parkingTime.Hours + 1) * feePerHour * 1.1);
             return fee;
         }
     }
@@ -93,9 +93,8 @@ namespace Parking_Management_Program
         public override long GetFee()
         {
             TimeSpan parkingTime = GetParkingTime();
-            long fee = (long)((parkingTime.Hours + 1) * feePerHour * 1.2);
+            long fee = (long)((parkingTime.Days * 24 + parkingTime.Hours + 1) * feePerHour * 1.2);
             return fee;
         }
-
     }
 }
