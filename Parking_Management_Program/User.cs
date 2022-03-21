@@ -32,7 +32,7 @@ namespace Parking_Management_Program
 
         public override string ToString()
         {
-            return $"차량번호 : {carNum} | 회원이름 : {userName} | 전화번호 : {phoneNum}원 | 적립금 : {userMoney}원";
+            return $"차량번호 : {carNum} | 회원이름 : {userName} | 전화번호 : {phoneNum} | 적립금 : {userMoney}원";
         }
     }
 }

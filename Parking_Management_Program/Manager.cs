@@ -372,7 +372,7 @@ namespace Parking_Management_Program
                 }
 
                 userNum = DateTime.Now.ToString("yyyyMMddHHmmss");
-                userList.Add(carNum, new User(userName, carNum, 0, userNum, phoneNum));
+                userList.Add(carNum, new User(carNum, userName, 0, userNum, phoneNum));
                 break;
             }
 
