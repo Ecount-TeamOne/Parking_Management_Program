@@ -14,7 +14,7 @@ namespace Parking_Management_Program
         private Car[,] parkingStatus;
         private List<Car> recordList;
         private Dictionary<string, User> userList;
-        private Dictionary<string, DateTime> LongNonExitList;
+        private Dictionary<string, DateTime> longNonExitList;
         private const string ADMIN_ID = "root";
         private const string ADMIN_PW = "rootpw";
         private Utils utils;
@@ -24,7 +24,7 @@ namespace Parking_Management_Program
             parkingStatus = new Car[10, 10];
             recordList = new List<Car>();
             userList = new Dictionary<string, User>();
-            LongNonExitList = new Dictionary<string, DateTime>();
+            longNonExitList = new Dictionary<string, DateTime>();
             utils = new Utils();
         }
         public void Run()
@@ -179,16 +179,16 @@ namespace Parking_Management_Program
         private void UpdateLongNonExitList() // 장기미출차(7일 초과) 리스트 갱신
         {
             // 나간 차량은 리스트에서 제거
-            Dictionary<string, DateTime> LongNonExitListCopy = new Dictionary<string, DateTime>();
-            foreach (var car in LongNonExitList)
+            Dictionary<string, DateTime> longNonExitListCopy = new Dictionary<string, DateTime>();
+            foreach (var car in longNonExitList)
             {
-                LongNonExitListCopy.Add(car.Key, car.Value);
+                longNonExitListCopy.Add(car.Key, car.Value);
             }
-            foreach (var car in LongNonExitListCopy)
+            foreach (var car in longNonExitListCopy)
             {
                 if (GetParkedCarLoc(car.Key) == null)
                 {
-                    this.LongNonExitList.Remove(car.Key);
+                    this.longNonExitList.Remove(car.Key);
                 }
             }
 
@@ -201,15 +201,15 @@ namespace Parking_Management_Program
                     {
                         Car car = this.parkingStatus[i, j];
                         TimeSpan parkingTime = DateTime.Now.Subtract(car.EnterTime);
-                        if (parkingTime.Days > 7 && !this.LongNonExitList.ContainsKey(car.CarNum))
+                        if (parkingTime.Days > 7 && !this.longNonExitList.ContainsKey(car.CarNum))
                         {
-                            this.LongNonExitList.Add(car.CarNum, car.EnterTime);
+                            this.longNonExitList.Add(car.CarNum, car.EnterTime);
                         }
                     }
                 }
             }
 
-            utils.ListToFile(this.LongNonExitList, "LongNonExitList.txt");
+            utils.ListToFile(this.longNonExitList, "LongNonExitList.txt");
         }
 
         public void ShowLongNonExitList()
@@ -221,13 +221,13 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("LongNonExitList.txt", FileMode.Open))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    this.LongNonExitList = (Dictionary<string, DateTime>)formatter.Deserialize(stream);
+                    this.longNonExitList = (Dictionary<string, DateTime>)formatter.Deserialize(stream);
                 }
             }
 
-            if (LongNonExitList.Count > 0)
+            if (longNonExitList.Count > 0)
             {
-                foreach (var car in LongNonExitList)
+                foreach (var car in longNonExitList)
                 {
                     Console.WriteLine($"차량번호 : {car.Key} | 입차시간 : {car.Value}");
                 }
