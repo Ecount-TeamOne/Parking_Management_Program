@@ -554,9 +554,9 @@ namespace Parking_Management_Program
         public void PrintFeeTable()
         {
             Console.WriteLine("========= 요 금 표 =========");
-            Console.WriteLine(" 1시간 (소형)  :  2 0 0 0 원");
-            Console.WriteLine(" 1시간 (중형)  :  2 5 0 0 원");
-            Console.WriteLine(" 1시간 (대형)  :  3 0 0 0 원");
+            Console.WriteLine("    1시간  :  2 0 0 0 원");
+            Console.WriteLine("    (중형 : 10% 추가금액)");
+            Console.WriteLine("    (대형 : 20% 추가금액)");
             Console.WriteLine("===========================");
         }
 
