@@ -399,6 +399,7 @@ namespace Parking_Management_Program
 
         public void PrintParkingStatus()
         {
+            string result;
             Console.WriteLine($"********** 총 주차된 차량 수 : {ParkingCarCount()} **********");
             for (int i = 0; i < this.parkingStatus.GetLength(0); i++)
             {
@@ -406,11 +407,13 @@ namespace Parking_Management_Program
                 {
                     if (this.parkingStatus[i, j] != null)
                     {
-                        Console.Write("[XXXXX]\t");
+                        
+                        result = this.parkingStatus[i, j].CarNum.Length == 7 ? $"[ {this.parkingStatus[i, j].CarNum}] " : $"[{this.parkingStatus[i, j].CarNum}] ";
+                        Console.Write(result);
                     }
                     else
                     {
-                        Console.Write($"[{(char)(i + 65)} - {j + 1}]\t");
+                        Console.Write($"[  {(char)(i + 65)} - {j + 1}  ] ");
                     }
                 }
                 Console.WriteLine();
