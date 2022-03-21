@@ -70,7 +70,7 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                  0. 종 료                                           │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
-            int key = int.Parse(Console.ReadLine());
+            int key = int.TryParse(Console.ReadLine(),out key)?key:999;
             return key;
         }
         private int ManagerMenu()
@@ -85,7 +85,7 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                  0. 이  전  메  뉴                                  │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
-            int key = int.Parse(Console.ReadLine());
+            int key = int.TryParse(Console.ReadLine(), out key) ? key : 999;
             return key;
         }
         private int UserMenu()
@@ -99,7 +99,7 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                  0. 이 전 메 뉴                                     │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
-            int key = int.Parse(Console.ReadLine());
+            int key = int.TryParse(Console.ReadLine(), out key) ? key : 999;
             return key;
         }
         public void UserSelect(string carNum)
