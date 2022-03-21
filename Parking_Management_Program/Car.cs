@@ -13,18 +13,17 @@ namespace Parking_Management_Program
         protected string carNum;
         protected DateTime enterTime;
         protected DateTime exitTime;
-        #region 추가
+        
         protected long fee;
         protected long feePerHour;
         //private Utils utils;
-        #endregion
+        
 
-        #region property
         public string CarNum { get { return carNum; } set { carNum = value; } }
         public DateTime EnterTime { get { return enterTime; } set { enterTime = value; } }
         public DateTime ExitTime { get { return exitTime; } set { exitTime = value; } }
         public long Fee { get { return fee; } set { fee = value; } }
-        #endregion
+        
 
         public Car(string carNum, DateTime enterTime)
         {
@@ -32,7 +31,7 @@ namespace Parking_Management_Program
             this.enterTime = enterTime;
             this.feePerHour = 2000;
         }
-        #region
+        
 
         public TimeSpan GetParkingTime()
         {
@@ -42,7 +41,7 @@ namespace Parking_Management_Program
 
         public abstract long GetFee();
 
-        #endregion
+        
     }
 
     [Serializable]

@@ -14,7 +14,7 @@ namespace Parking_Management_Program
         private Car[,] parkingStatus;
         private List<Car> recordList;
         private Dictionary<string, User> userList;
-        private Dictionary<string, DateTime> longNonExitList;
+        private Dictionary<string, DateTime> LongNonExitList;
         private const string ADMIN_ID = "root";
         private const string ADMIN_PW = "rootpw";
         private Utils utils;
@@ -24,7 +24,7 @@ namespace Parking_Management_Program
             parkingStatus = new Car[10, 10];
             recordList = new List<Car>();
             userList = new Dictionary<string, User>();
-            longNonExitList = new Dictionary<string, DateTime>();
+            LongNonExitList = new Dictionary<string, DateTime>();
             utils = new Utils();
         }
         public void Run()
@@ -147,7 +147,7 @@ namespace Parking_Management_Program
                         break;
                     case 5:
                         // 장기미출차 테스트용
-                        test();
+                        Test();
                         break;
                     default:
                         Console.WriteLine("[잘 못  선 택 하 였 습 니 다 . ]");
@@ -179,16 +179,16 @@ namespace Parking_Management_Program
         private void UpdateLongNonExitList() // 장기미출차(7일 초과) 리스트 갱신
         {
             // 나간 차량은 리스트에서 제거
-            Dictionary<string, DateTime> longNonExitListCopy = new Dictionary<string, DateTime>();
-            foreach (var car in longNonExitList)
+            Dictionary<string, DateTime> LongNonExitListCopy = new Dictionary<string, DateTime>();
+            foreach (var car in LongNonExitList)
             {
-                longNonExitListCopy.Add(car.Key, car.Value);
+                LongNonExitListCopy.Add(car.Key, car.Value);
             }
-            foreach (var car in longNonExitListCopy)
+            foreach (var car in LongNonExitListCopy)
             {
-                if (getParkedCarLoc(car.Key) == null)
+                if (GetParkedCarLoc(car.Key) == null)
                 {
-                    this.longNonExitList.Remove(car.Key);
+                    this.LongNonExitList.Remove(car.Key);
                 }
             }
 
@@ -201,15 +201,15 @@ namespace Parking_Management_Program
                     {
                         Car car = this.parkingStatus[i, j];
                         TimeSpan parkingTime = DateTime.Now.Subtract(car.EnterTime);
-                        if (parkingTime.Days > 7 && !this.longNonExitList.ContainsKey(car.CarNum))
+                        if (parkingTime.Days > 7 && !this.LongNonExitList.ContainsKey(car.CarNum))
                         {
-                            this.longNonExitList.Add(car.CarNum, car.EnterTime);
+                            this.LongNonExitList.Add(car.CarNum, car.EnterTime);
                         }
                     }
                 }
             }
 
-            utils.ListToFile(this.longNonExitList, "LongNonExitList.txt");
+            utils.ListToFile(this.LongNonExitList, "LongNonExitList.txt");
         }
 
         public void ShowLongNonExitList()
@@ -221,13 +221,13 @@ namespace Parking_Management_Program
                 using (Stream stream = new FileStream("LongNonExitList.txt", FileMode.Open))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    this.longNonExitList = (Dictionary<string, DateTime>)formatter.Deserialize(stream);
+                    this.LongNonExitList = (Dictionary<string, DateTime>)formatter.Deserialize(stream);
                 }
             }
 
-            if (longNonExitList.Count > 0)
+            if (LongNonExitList.Count > 0)
             {
-                foreach (var car in longNonExitList)
+                foreach (var car in LongNonExitList)
                 {
                     Console.WriteLine($"차량번호 : {car.Key} | 입차시간 : {car.Value}");
                 }
@@ -239,10 +239,10 @@ namespace Parking_Management_Program
         }
 
         // 장기미출차 테스트용
-        public void test()
+        public void Test()
         {
             string carNum = utils.InputCarNum();
-            var loc = getParkedCarLoc(carNum);
+            var loc = GetParkedCarLoc(carNum);
             parkingStatus[loc.Item1, loc.Item2].EnterTime = new DateTime(2022, 03, 11, 00, 00, 00);
         }
 
@@ -437,7 +437,7 @@ namespace Parking_Management_Program
             string carType, carNum;
             DateTime enterTime;
             // 만차 여부 확인
-            if (isParkinglotFull())
+            if (IsParkinglotFull())
             {
                 Console.WriteLine("[>> 현재 만차로 주차가 불가능합니다. 초기 메뉴로 이동합니다.]");
                 return;
@@ -481,7 +481,7 @@ namespace Parking_Management_Program
                     continue;
                 }
                 // 기주차 차량 여부 확인
-                if (getParkedCarLoc(carNum) != null)
+                if (GetParkedCarLoc(carNum) != null)
                 {
                     Console.WriteLine("[>> 해당 차량은 이미 주차되어 있습니다. 초기 메뉴로 이동합니다.]\n");
                     return;
@@ -512,13 +512,13 @@ namespace Parking_Management_Program
 
             parkingStatus[i, j] = enterCar;
             Console.WriteLine("[>> 입차 처리가 완료되었습니다.]");
-            printEnterInfo(enterCar, i, j);
+            PrintEnterInfo(enterCar, i, j);
         }
 
         public void Exit()
         {
             string carNum = utils.InputCarNum();
-            Tuple<int, int> carSpace = getParkedCarLoc(carNum);
+            Tuple<int, int> carSpace = GetParkedCarLoc(carNum);
 
             if (carSpace == null)
             {
@@ -534,7 +534,7 @@ namespace Parking_Management_Program
             Console.WriteLine("[출차가 완료되었습니다.]");
         }
 
-        public bool isParkinglotFull()
+        public bool IsParkinglotFull()
         {
             for (int i = 0; i < parkingStatus.GetLength(0); i++)
             {
@@ -560,7 +560,7 @@ namespace Parking_Management_Program
             Console.WriteLine("===========================");
         }
 
-        public void printEnterInfo(Car car, int i, int j)
+        public void PrintEnterInfo(Car car, int i, int j)
         {
             Console.WriteLine("============주차 정보=============");
             Console.WriteLine($"차량 번호 :\t{car.CarNum}");
@@ -569,7 +569,7 @@ namespace Parking_Management_Program
             Console.WriteLine("==================================");
         }
 
-        public Tuple<int, int> getParkedCarLoc(string carNum)
+        public Tuple<int, int> GetParkedCarLoc(string carNum)
         {
             for (int i = 0; i < parkingStatus.GetLength(0); i++)
             {
