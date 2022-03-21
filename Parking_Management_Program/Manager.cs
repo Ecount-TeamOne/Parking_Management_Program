@@ -94,8 +94,6 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                   회 원 메 뉴                                       │");
             Console.WriteLine("│                                  1. 적 립 금 조 회                                  │");
             Console.WriteLine("│                                  2. 적 립 금 충 전                                  │");
-            Console.WriteLine("│                                  3. 주 차 하 기                                     │");
-            Console.WriteLine("│                                  4. 출 차 하 기                                     │");
             Console.WriteLine("│                                  0. 이 전 메 뉴                                     │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
@@ -114,12 +112,6 @@ namespace Parking_Management_Program
                         break;
                     case 2:
                         ChargeUserMoney(carNum);
-                        break;
-                    case 3:
-                        Enter();
-                        break;
-                    case 4:
-                        Exit();
                         break;
                     default:
                         Console.WriteLine("[잘 못  선 택 하 였 습 니 다 . ]");
