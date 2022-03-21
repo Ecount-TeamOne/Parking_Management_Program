@@ -23,7 +23,6 @@ namespace Parking_Management_Program
             return Regex.IsMatch(phoneNum, @"^01([0-1|6-9])[ -]?(\d{3,4})[ -]?(\d{4})$");
         }
 
-        
 
         public bool CheckCarType(string carType)
         {

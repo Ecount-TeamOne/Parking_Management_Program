@@ -81,6 +81,7 @@ namespace Parking_Management_Program
             Console.WriteLine("│                                  2. 주 차 차 량  검 색                              │");
             Console.WriteLine("│                                  3. 주 차 차 량  현 황                              │");
             Console.WriteLine("│                                  4. 장기미출차목록 조회                             │");
+            Console.WriteLine("│                                  5. 회 원 목 록 조 회                               │");
             Console.WriteLine("│                                  0. 이  전  메  뉴                                  │");
             Console.WriteLine("└─────────────────────────────────────────────────────────────────────────────────────┘");
             Console.Write("[메 뉴 를  선 택 해 주 세 요 : ]  ");
@@ -146,7 +147,10 @@ namespace Parking_Management_Program
                         ShowLongNonExitList();
                         break;
                     case 5:
-                        // 장기미출차 테스트용
+                        ShowUserList();
+                        break;
+                    case 6:
+                        //Test 용
                         Test();
                         break;
                     default:
@@ -370,6 +374,25 @@ namespace Parking_Management_Program
                 userNum = DateTime.Now.ToString("yyyyMMddHHmmss");
                 userList.Add(carNum, new User(userName, carNum, 0, userNum, phoneNum));
                 break;
+            }
+
+        }
+
+        public void ShowUserList()
+        {
+            if (userList.Count == 0)
+            {
+                Console.WriteLine("[ 표 시 할  회 원 정 보 가  없 습 니 다 . ]");
+
+            }
+            else
+            {
+                Console.WriteLine("=========================================== 회원 목록 ===========================================");
+                foreach(var user in userList)
+                {
+                    Console.WriteLine(user);
+                }
+                Console.WriteLine("=================================================================================================");
             }
 
         }
