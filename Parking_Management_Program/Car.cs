@@ -30,6 +30,7 @@ namespace Parking_Management_Program
         {
             this.carNum = carNum;
             this.enterTime = enterTime;
+            this.feePerHour = 2000;
         }
         #region
 
@@ -39,12 +40,7 @@ namespace Parking_Management_Program
             return time;
         }
 
-        public long GetFee()
-        {
-            TimeSpan parkingTime = GetParkingTime();
-            long fee = (parkingTime.Hours + 1) * feePerHour;
-            return fee;
-        }
+        public abstract long GetFee();
 
         #endregion
     }
@@ -52,43 +48,54 @@ namespace Parking_Management_Program
     [Serializable]
     public class CompactCar : Car
     {
-        public CompactCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
-        {
-            this.feePerHour = 2000;
-        }
+        public CompactCar(string carNum, DateTime enterTime) : base(carNum, enterTime) { }
 
         public override string ToString()
         {
             return $"차량번호 : {carNum} | 차종 : 소형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
+        }
+
+        public override long GetFee()
+        {
+            TimeSpan parkingTime = GetParkingTime();
+            long fee = (parkingTime.Hours + 1) * feePerHour;
+            return fee;
         }
     }
 
     [Serializable]
     public class MidsizedCar : Car
     {
-        public MidsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
-        {
-            this.feePerHour = 2500;
-        }
+        public MidsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime) { }
 
         public override string ToString()
         {
             return $"차량번호 : {carNum} | 차종 : 중형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
         }
 
+        public override long GetFee()
+        {
+            TimeSpan parkingTime = GetParkingTime();
+            long fee = (long)((parkingTime.Hours + 1) * feePerHour * 1.1);
+            return fee;
+        }
     }
 
     [Serializable]
     public class FullsizedCar : Car
     {
-        public FullsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime)
-        {
-            this.feePerHour = 3000;
-        }
+        public FullsizedCar(string carNum, DateTime enterTime) : base(carNum, enterTime) { }
 
         public override string ToString()
         {
             return $"차량번호 : {carNum} | 차종 : 대형 | 입차시간 : {enterTime} | 출차시간 : {exitTime} | 요금 : {fee}원";
+        }
+
+        public override long GetFee()
+        {
+            TimeSpan parkingTime = GetParkingTime();
+            long fee = (long)((parkingTime.Hours + 1) * feePerHour * 1.2);
+            return fee;
         }
 
     }

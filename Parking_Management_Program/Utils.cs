@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Collections;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Parking_Management_Program
 {
@@ -66,6 +69,14 @@ namespace Parking_Management_Program
             Console.WriteLine("감 사 합 니 다 .  안 녕 히  가 세 요 .");
         }
 
+        public void ListToFile(ICollection list, string fileName)
+        {
+            using (Stream stream = new FileStream(fileName, FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, list);
+            }
+        }
 
         #endregion
 
